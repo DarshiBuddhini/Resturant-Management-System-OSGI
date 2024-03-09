@@ -47,10 +47,11 @@ Scanner scanner = new Scanner(System.in);
 			System.out.println("a. Add Food Item.");
 			System.out.println("b. Remove Food Item.");
 			System.out.println("c. Get Total.");
-			System.out.println("d. Get Discount.");
+			System.out.println("d. View total Discount.");
 			System.out.println("e. Get Total Bill.");
-			System.out.println("f. Print Bill.");
-			System.out.println("g. Type \"Stop\" to End.");
+			System.out.println("f. Print Bill as CSV.");
+			System.out.println("g. Import Menu Items as CSV.");
+			System.out.println("h. Type \"Stop\" to End.");
 			System.out.println("");
 			
 			System.out.print("Enter the Task : ");
@@ -59,22 +60,7 @@ Scanner scanner = new Scanner(System.in);
 			
 			if(operation.equalsIgnoreCase("a")) {
 				
-				System.out.println("\nMenu:");
-				System.out.println("------------------------------------------------------------");
-				System.out.println("|   Code   |      Item                  |    Price (LKR)   |");
-				System.out.println("------------------------------------------------------------");
-				System.out.println("|   E001   | Chicken Pizza            |      800.00        |");
-				System.out.println("|   E002   | Chicken Fried Rice       |      600.00        |");
-				System.out.println("|   E003   | Veg Fried Rice           |      500.00        |");
-				System.out.println("|   E004   | Chicken Kottu            |      700.00        |");
-				System.out.println("|   E005   | Veg Kottu                |      500.00        |");
-				System.out.println("|   E006   | Chocolate Milk Shake     |      300.00        |");
-				System.out.println("------------------------------------------------------------");
-				System.out.println("  * Prices are in Sri Lankan Rupees (LKR)");
-				System.out.println("  * All prices are inclusive of taxes");
-				System.out.println("  * Enjoy your meal!");
-				System.out.println("------------------------------------------------------------");
-				System.out.println("");
+				billingService.getMenu();
 
 			    System.out.print("Enter Product Code: ");
 			    String productName = scanner.next();
@@ -127,6 +113,10 @@ Scanner scanner = new Scanner(System.in);
 					billingService.printBill(0);
 				}
 					
+			}else if(operation.equalsIgnoreCase("g")) {
+				
+				billingService.importMenuItemsFromCSV();
+				
 			}else {
 				
 				break;

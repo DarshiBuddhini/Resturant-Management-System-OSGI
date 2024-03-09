@@ -6,7 +6,10 @@ public interface FoodOrderingService {
 	public double getTotal();
 	public double clacDiscount(double discountPar);
 	public void getTotalBill(double discount);
-	public String getProductName(String itemCode);
+	public String getItemName(String itemCode);
 	public void printBill(double discountPar);
-	public int getItemQuantity(String itemCode , double itemTotalPrice);
+	void getMenu();
+	double getItemUnitPrice(String code);
+	void importMenuItemsFromCSV();
+
 }

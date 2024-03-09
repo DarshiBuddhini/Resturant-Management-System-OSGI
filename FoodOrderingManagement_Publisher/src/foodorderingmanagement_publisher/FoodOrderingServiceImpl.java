@@ -1,76 +1,76 @@
 package foodorderingmanagement_publisher;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
 public class FoodOrderingServiceImpl implements FoodOrderingService{
 	
 private final Map<String, Double> bill = new HashMap<>();
-	
-	private double chickenPizza = 800.00;
-	private double chickenFriedRice = 600.00;
-	private double vegFriedRice = 500.00;
-	private double chickenKottu = 700.00;
-	private double vegKottu = 500.00;
-	private double chocolateMilkShake = 300.00;
+
+    private MenuItem[] menuItems = {
+        new MenuItem("E001", "Chicken Pizza", 800.00),
+        new MenuItem("E002", "Chicken Fried Rice", 600.00),
+        new MenuItem("E003", "Veg Fried Rice", 500.00),
+        new MenuItem("E004", "Chicken Kottu", 700.00),
+        new MenuItem("E005", "Veg Kottu", 500.00),
+        new MenuItem("E006", "Chocolate Milkshake", 300.00)
+    };
 	
 	Scanner scanner = new Scanner(System.in);
 	
 	@Override
-	public void addPrice(String name, int quantity) {
-		
-		if (name.equalsIgnoreCase("E001")) {
-			bill.put(name, quantity * chickenPizza);
-		}	
-		else if(name.equalsIgnoreCase("E002")) {
-			bill.put(name, quantity * chickenFriedRice);
-		}
-		else if(name.equalsIgnoreCase("E003")) {
-			bill.put(name, quantity * vegFriedRice);
-		}
-		else if(name.equalsIgnoreCase("E004")) {
-			bill.put(name, quantity * chickenKottu);
-		}
-		else if(name.equalsIgnoreCase("E005")) {
-			bill.put(name, quantity * vegKottu);
-		}
-		else if(name.equalsIgnoreCase("E006")) {
-			bill.put(name, quantity * chocolateMilkShake);
-		}
-		else {
-			System.out.println("\n");
-			System.out.println("Food Item not found");
-			System.out.println("\n");
-			return; 
-		}
-		
-		System.out.println("\n-----------------------");
-		System.out.println("| Added Successfully! |");
-		System.out.println("-----------------------");
-		
-		
+	public void addPrice(String code, int quantity) {
+	    boolean itemFound = false;
+
+	    for (MenuItem menuItem : menuItems) {
+	        if (code.equalsIgnoreCase(menuItem.itemCode)) {
+	            double totalPrice = quantity * menuItem.itemPrice;
+
+	            if (bill.containsKey(menuItem.itemCode)) {
+	                double existingTotalPrice = bill.get(menuItem.itemCode);
+	                bill.put(menuItem.itemCode, existingTotalPrice + totalPrice);
+	            } else {
+	                bill.put(menuItem.itemCode, totalPrice);
+	            }
+
+	            itemFound = true;
+	            break;
+	        }
+	    }
+
+	    if (!itemFound) {
+	        System.out.println("\nFood Item not found\n");
+	        return;
+	    }
+
+	    System.out.println("\n-----------------------");
+	    System.out.println("| Added Successfully! |");
+	    System.out.println("-----------------------");
+
 	    System.out.print("Do you want to add more items? (yes/no): ");
 	    String userChoice = scanner.next().toLowerCase();
 
 	    if (userChoice.equals("yes")) {
-	      
 	        System.out.print("Enter Product Code: ");
 	        String productName = scanner.next();
-	        
+
 	        System.out.print("Enter quantity: ");
 	        int newQuantity = scanner.nextInt();
 
-	     
 	        addPrice(productName, newQuantity);
 	    } else if (userChoice.equals("no")) {
-	    	
 	        return;
 	    } else {
 	        System.out.println("Invalid choice. Returning to the menu.\n");
@@ -78,47 +78,29 @@ private final Map<String, Double> bill = new HashMap<>();
 	    }
 	}
 
+
 	@Override
-	public void removePrice(String name, int quantity) {
+	public void removePrice(String code, int quantity) {
+	    boolean itemFound = false;
 
-	    double newPrice = 0, currentPrice = 0;
+	    for (MenuItem menuItem : menuItems) {
+	        if (code.toLowerCase().equals(menuItem.itemCode.toLowerCase())) {
+	            double currentPrice = bill.getOrDefault(menuItem.itemCode, 0.0);
+	            double newPrice = quantity * menuItem.itemPrice;
 
-	    if (name.equalsIgnoreCase("E001")) {
-	        newPrice = quantity * chickenPizza;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else if (name.equalsIgnoreCase("E002")) {
-	        newPrice = quantity * chickenFriedRice;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else if (name.equalsIgnoreCase("E003")) {
-	        newPrice = quantity * vegFriedRice;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else if (name.equalsIgnoreCase("E004")) {
-	        newPrice = quantity * chickenKottu;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else if (name.equalsIgnoreCase("E005")) {
-	        newPrice = quantity * vegKottu;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else if (name.equalsIgnoreCase("E006")) {
-	        newPrice = quantity * chocolateMilkShake;
-	        currentPrice = bill.getOrDefault(name, 0.0);
-	    } 
-	    else {
-	    	System.out.println("\n");
-	        System.out.println("Food Item not found");
-	        System.out.println("\n");
-	        return; 
+	            bill.put(menuItem.itemCode, Math.max(0, currentPrice - newPrice));
+
+	            itemFound = true;
+	            System.out.println("\n-------------------------");
+	            System.out.println("| Deleted Successfully! |");
+	            System.out.println("-------------------------");
+	            break;
+	        }
 	    }
 
-	    bill.put(name, currentPrice - newPrice);
-
-	    System.out.println("\n-------------------------");
-	    System.out.println("| Deleted Successfully! |");
-	    System.out.println("-------------------------");
+	    if (!itemFound) {
+	        System.out.println("\nFood Item not found\n");
+	    }
 	}
 
 	@Override
@@ -129,87 +111,123 @@ private final Map<String, Double> bill = new HashMap<>();
         }
 		return total;	
 	}
+	
+	@Override
+	public void getMenu() {
+	    System.out.println("\nMenu:");
+	    System.out.println("------------------------------------------------------------");
+	    System.out.println("|   Code   |      Item                  |    Price (LKR)   |");
+	    System.out.println("------------------------------------------------------------");
+
+	    for (MenuItem menuItem : menuItems) {
+	        System.out.printf("|   %-6s | %-25s | %-16.2f |\n", menuItem.itemCode, menuItem.itemName, menuItem.itemPrice);
+	    }
+
+	    System.out.println("------------------------------------------------------------");
+	    System.out.println("  * Prices are in Sri Lankan Rupees (LKR)");
+	    System.out.println("  * All prices are inclusive of taxes");
+	    System.out.println("  * Enjoy your meal!");
+	    System.out.println("------------------------------------------------------------");
+	    System.out.println("");
+	}
+
 
 	@Override
 	public void getTotalBill(double discount) {
-	    // Get the current date and time
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    String currentDateTime = dateFormat.format(new Date());
 
-	    System.out.println("--------------------------------------------------------------");
-	    System.out.println("|                            Bill                            |");
-	    System.out.println("--------------------------------------------------------------");
-	    System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", "ITEM CODE", "ITEM NAME", "QUANTITY", "TOTAL");
+	    System.out.println("-------------------------------------------------------------------------------------------------------------");
+	    System.out.println("|                            Bill                                                                           |");
+	    System.out.println("-------------------------------------------------------------------------------------------------------------");
+	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "ITEM CODE", "ITEM NAME", "UNIT PRICE(LKR)", "QUANTITY", "TOTAL");
 
-	    for (Map.Entry<String, Double> entry : bill.entrySet()) {
-	        String itemName = getProductName(entry.getKey());
-	        int itemQuantity = getItemQuantity(entry.getKey(), entry.getValue());
-	        System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", entry.getKey(), itemName, itemQuantity, entry.getValue());
+	    Iterator<Map.Entry<String, Double>> iterator = bill.entrySet().iterator();
+	    while (iterator.hasNext()) {
+	        Map.Entry<String, Double> entry = iterator.next();
+	        String itemCode = entry.getKey();
+	        String itemName = getItemName(itemCode);
+	        double itemPrice = entry.getValue();
+	        double unitPrice = getItemUnitPrice(itemCode);
+	        int itemQuantity = (int) (itemPrice / unitPrice);
+
+	        if (itemQuantity > 0) {
+	            System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", itemCode, itemName, unitPrice, itemQuantity, itemPrice);
+	        } else {
+	            iterator.remove();
+	        }
 	    }
 
-	    System.out.println("--------------------------------------------------------------");
+	    System.out.println("------------------------------------------------------------------------------------------------------------");
 
 	    double totalBeforeDiscount = getTotal();
 	    double totalAfterDiscount = totalBeforeDiscount - discount;
 
-	    System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", "Subtotal : ", "", "", totalBeforeDiscount);
-	    System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", "Discount : ", "", "", discount);
+	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Subtotal : ", "", "", "", totalBeforeDiscount);
+	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Discount : ", "", "", "", discount);
 	    System.out.println("--------------------------------------------------------------");
-	    System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", "Total : ", "", "", totalAfterDiscount);
+	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Total : ", "", "", "", totalAfterDiscount);
 	    System.out.println("--------------------------------------------------------------");
-	    System.out.printf("| %-15s | %-15s | %-10s | %-8s |\n", "Date : ", "", "", currentDateTime);
+	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Date : ", "", "", "", currentDateTime);
 	    System.out.println("--------------------------------------------------------------");
-	}
-
-	
-	@Override
-	public String getProductName(String itemCode) {
-	    switch (itemCode.toUpperCase()) {
-	        case "E001":
-	            return "Chicken Pizza";
-	        case "E002":
-	            return "Chicken Fried Rice";
-	        case "E003":
-	            return "Veg Fried Rice";
-	        case "E004":
-	            return "Chicken Kottu";
-	        case "E005":
-	            return "Veg Kottu";
-	        case "E006":
-	            return "Chocolate Milkshake";
-	        default:
-	            return "Unknown Product";
-	    }
 	}
 	
 	@Override
-	public int getItemQuantity(String itemCode , double itemTotalPrice) {
-	    switch (itemCode.toUpperCase()) {
-	        case "E001":
-	            return (int) (itemTotalPrice/chickenPizza);
-	        case "E002":
-	            return (int) (itemTotalPrice/chickenFriedRice);
-	        case "E003":
-	            return (int) (itemTotalPrice/vegFriedRice);
-	        case "E004":
-	            return (int) (itemTotalPrice/chickenKottu);
-	        case "E005":
-	            return (int) (itemTotalPrice/vegKottu);
-	        case "E006":
-	            return (int) (itemTotalPrice/chocolateMilkShake);
-	        default:
-	            return 0;
+	public String getItemName(String code) {
+	    for (MenuItem menuItem : menuItems) {
+	        if (code.equalsIgnoreCase(menuItem.itemCode)) {
+	            return menuItem.itemName;
+	        }
 	    }
+	    return "N/A";
+	}
+	
+	@Override
+	public double getItemUnitPrice(String code) {
+	    for (MenuItem menuItem : menuItems) {
+	        if (code.equalsIgnoreCase(menuItem.itemCode)) {
+	            return menuItem.itemPrice;
+	        }
+	    }
+	    return 0.0;
 	}
 
 	@Override
 	public double clacDiscount(double percentage) {
 		return (percentage * getTotal()) / 100.0;
 	}
+	
+	@Override
+	public void importMenuItemsFromCSV() {
+        List<MenuItem> newMenuItems = new ArrayList<>();
+
+        System.out.print("Enter the folder path to import this CSV (e.g., C:\\Users\\ASUS\\Desktop\\menuitems.csv): ");
+	    String filePath = scanner.nextLine();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        	// Skip the header line
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String itemCode = parts[0].trim();
+                    String itemName = parts[1].trim();
+                    double itemPrice = Double.parseDouble(parts[2].trim());
+
+                    newMenuItems.add(new MenuItem(itemCode, itemName, itemPrice));
+                }
+            }
+
+            menuItems = newMenuItems.toArray(new MenuItem[0]);
+            System.out.println("Menu items imported successfully!");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error reading CSV file: " + e.getMessage());
+        }
+    }
 
 	@Override
 	public void printBill(double percentage) {
-	    Scanner scanner = new Scanner(System.in);
 
 	    System.out.print("Enter the folder path to save the bill (e.g., C:\\Users\\ASUS\\Desktop\\): ");
 	    String folderPath = scanner.nextLine();
@@ -221,25 +239,30 @@ private final Map<String, Double> bill = new HashMap<>();
 
 	    try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
 
-	        writer.println("ITEM CODE,ITEM NAME,QUANTITY,TOTAL(LKR)");
+	        writer.println("ITEM CODE,ITEM NAME,UNIT PRICE(LKR),QUANTITY,TOTAL(LKR)");
 
 	        for (Map.Entry<String, Double> entry : bill.entrySet()) {
-	            String itemName = getProductName(entry.getKey());
-	            int itemQuantity = getItemQuantity(entry.getKey(), entry.getValue());
-	            writer.printf("%s,%s,%d,%.2f\n", entry.getKey(), itemName, itemQuantity, entry.getValue());
+	            String itemCode = entry.getKey();
+	            String itemName = getItemName(entry.getKey());
+	            double unitPrice = getItemUnitPrice(entry.getKey());
+	            double itemPrice = entry.getValue();
+	            int itemQuantity = (int) (itemPrice / unitPrice);
+	            writer.printf("%s,%s,%.2f,%d,%.2f\n", itemCode, itemName, unitPrice, itemQuantity, itemPrice);
 	        }
 
 	        double totalBeforeDiscount = getTotal();
 	        double totalAfterDiscount = totalBeforeDiscount - clacDiscount(percentage);
 
-	        writer.printf("Subtotal, , ,%.2f\n", totalBeforeDiscount);
-	        writer.printf("Discount, , ,%.2f\n", clacDiscount(percentage));
-	        writer.printf("Total, , ,%.2f\n", totalAfterDiscount);
+	        writer.printf("Subtotal,,,,%.2f\n", totalBeforeDiscount);
+	        writer.printf("Discount,,,,%.2f\n", clacDiscount(percentage));
+	        writer.printf("Total,,,,%.2f\n", totalAfterDiscount);
 
 	        System.out.println("Bill created successfully at: " + filePath);
 	    } catch (IOException e) {
 	        System.out.println("Error writing to CSV file: " + e.getMessage());
 	    }
 	}
+
+
 	
 }
