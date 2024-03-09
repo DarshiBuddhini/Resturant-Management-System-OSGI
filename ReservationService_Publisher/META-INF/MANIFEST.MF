@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ReservationService_Publisher
+Bundle-SymbolicName: ReservationService_Publisher
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: reservationservice_publisher.ReservationPublisherActivator
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: ParkingService.Publisher
+Export-Package: reservationservice_publisher
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
