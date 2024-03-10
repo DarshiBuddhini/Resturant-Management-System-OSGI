@@ -153,7 +153,6 @@ public class AdministrationServiceImpl implements AdministrationService{
                 }
 	        }
 
-	        userScanner.close();
 	        System.out.println("\n\n***Employee details imported successfully from " + filePath);
 
 	    } catch (FileNotFoundException e) {
