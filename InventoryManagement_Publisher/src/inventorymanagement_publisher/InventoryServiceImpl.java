@@ -131,7 +131,7 @@ public class InventoryServiceImpl implements InventoryService{
 	
 	@Override
 	public void printInventoryToCSV() {
-	    String filePath = "F:\\SLIIT\\year 3\\Semester 2\\Projects\\SA - SE3030\\expoInventory.csv";
+	    String filePath = "E:\\inventoryexpo.csv";
 	    try (PrintWriter writer = new PrintWriter(new File(filePath))) {
 	        StringBuilder sb = new StringBuilder();
 	        sb.append("Product,Unit Price,Quantity,Reorder Level\n");
@@ -152,7 +152,7 @@ public class InventoryServiceImpl implements InventoryService{
 	
 	@Override
 	public void importInventoryFromCSV() {
-	    String filePath = "F:\\SLIIT\\year 3\\Semester 2\\Projects\\SA - SE3030\\inventory.csv";
+	    String filePath = "E:\\inventory.csv";
 	    File file = new File(filePath);
 
 	    try (Scanner scanner = new Scanner(file)) {
