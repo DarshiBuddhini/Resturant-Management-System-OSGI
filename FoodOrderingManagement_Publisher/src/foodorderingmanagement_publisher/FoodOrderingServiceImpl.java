@@ -138,7 +138,7 @@ private final Map<String, Double> bill = new HashMap<>();
 	    String currentDateTime = dateFormat.format(new Date());
 
 	    System.out.println("-------------------------------------------------------------------------------------------------------------");
-	    System.out.println("|                            Bill                                                                           |");
+	    System.out.println("|                                               Bill                                                        |");
 	    System.out.println("-------------------------------------------------------------------------------------------------------------");
 	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "ITEM CODE", "ITEM NAME", "UNIT PRICE(LKR)", "QUANTITY", "TOTAL");
 
@@ -165,11 +165,11 @@ private final Map<String, Double> bill = new HashMap<>();
 
 	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Subtotal : ", "", "", "", totalBeforeDiscount);
 	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Discount : ", "", "", "", discount);
-	    System.out.println("--------------------------------------------------------------");
+	    System.out.println("------------------------------------------------------------------------------------------------------------");
 	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Total : ", "", "", "", totalAfterDiscount);
-	    System.out.println("--------------------------------------------------------------");
+	    System.out.println("------------------------------------------------------------------------------------------------------------");
 	    System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-8s |\n", "Date : ", "", "", "", currentDateTime);
-	    System.out.println("--------------------------------------------------------------");
+	    System.out.println("------------------------------------------------------------------------------------------------------------");
 	}
 	
 	@Override
